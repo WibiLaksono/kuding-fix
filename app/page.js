@@ -1,101 +1,137 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [users, setUsers] = useState([]);
+  const [listings, setListings] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    // Fetch data dari backend
+    const fetchData = async () => {
+      try {
+        const [usersRes, listingsRes, transactionsRes] = await Promise.all([
+          fetch("http://localhost:5000/users"),
+          fetch("http://localhost:5000/listings"),
+          fetch("http://localhost:5000/transactions"),
+        ]);
+
+        const usersData = await usersRes.json();
+        const listingsData = await listingsRes.json();
+        const transactionsData = await transactionsRes.json();
+
+        setUsers(usersData);
+        setListings(listingsData);
+        setTransactions(transactionsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <main className="p-6 bg-gray-100 min-h-screen text-black">
+      <h1 className="text-3xl font-bold text-center mb-6 ">Database WRPL</h1>
+
+      {/* Table Users */}
+      <section className="mb-10">
+        <h2 className="text-2xl font-semibold mb-4">Users</h2>
+        <div className="overflow-y-auto bg-white shadow-md rounded-lg p-4 max-h-96">
+          <table className="w-full border-collapse border border-gray-200">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border p-2 ">ID</th>
+                <th className="border p-2 ">Username</th>
+                <th className="border p-2 ">Email</th>
+                <th className="border p-2 ">Role</th>
+                <th className="border p-2 ">Join Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.slice(0, 20).map((user) => (
+                <tr key={user.id} className="hover:bg-gray-100 ">
+                  <td className="border p-2 text-center">{user.id}</td>
+                  <td className="border p-2">{user.username}</td>
+                  <td className="border p-2">{user.email}</td>
+                  <td className="border p-2 text-center">{user.role}</td>
+                  <td className="border p-2 text-center">{user.join_date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      {/* Table Listings */}
+      <section className="mb-10">
+        <h2 className="text-2xl font-semibold mb-4">Listings</h2>
+        <div className="overflow-y-auto bg-white shadow-md rounded-lg p-4 max-h-96">
+          <table className="w-full border-collapse border border-gray-200">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border p-2">ID</th>
+                <th className="border p-2">Title</th>
+                <th className="border p-2">Description</th>
+                <th className="border p-2">Price</th>
+                <th className="border p-2">Condition</th>
+                <th className="border p-2">Status</th>
+                <th className="border p-2">Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              {listings.slice(0, 20).map((listing) => (
+                <tr key={listing.id} className="hover:bg-gray-100">
+                  <td className="border p-2 text-center">{listing.id}</td>
+                  <td className="border p-2">{listing.title}</td>
+                  <td className="border p-2">{listing.description}</td>
+                  <td className="border p-2 text-center">{listing.price}</td>
+                  <td className="border p-2 text-center">{listing.condition}</td>
+                  <td className="border p-2 text-center">{listing.status}</td>
+                  <td className="border p-2">{listing.User?.username}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Table Transactions */}
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">Transactions</h2>
+        <div className="overflow-y-auto bg-white shadow-md rounded-lg p-4 max-h-96">
+          <table className="w-full border-collapse border border-gray-200">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border p-2">ID</th>
+                <th className="border p-2">Buyer</th>
+                <th className="border p-2">Seller</th>
+                <th className="border p-2">Listing</th>
+                <th className="border p-2">Total</th>
+                <th className="border p-2">Payment Status</th>
+                <th className="border p-2">Shipping Status</th>
+                <th className="border p-2">Transaction Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.slice(0, 20).map((transaction) => (
+                <tr key={transaction.id} className="hover:bg-gray-100">
+                  <td className="border p-2 text-center">{transaction.id}</td>
+                  <td className="border p-2">{transaction.Buyer?.username}</td>
+                  <td className="border p-2">{transaction.Seller?.username}</td>
+                  <td className="border p-2">{transaction.Listing?.title}</td>
+                  <td className="border p-2 text-center">{transaction.total_amount}</td>
+                  <td className="border p-2 text-center">{transaction.payment_status}</td>
+                  <td className="border p-2 text-center">{transaction.shipping_status}</td>
+                  <td className="border p-2 text-center">{transaction.transaction_date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   );
 }
