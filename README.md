@@ -1,17 +1,72 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+Rules if you wanna commit a change on your job:
+
+| Menambahkan sesuatu  | Mengupdate sesuatu  | Menghapus sesuatu  |
+|-----------|-----------|-----------|
+| Add    | Update    | Delete    |
+| Ex = Add : file navbar.js    | Ex = Update : File navbar.js (Perbarui variable warna)     | Ex = Delete : File navbar.js   |
+
+
 ## Getting Started
 
-First, run the development server:
+First, clone the repositories:
 
 ```bash
+git clone https://github.com/WibiLaksono/kuding-fix.git
+#and
+cd kuding-fix
+```
+
+Second, Install dependecies if you on kuding-fix now: 
+
+```bash
+npm instal
+#and
+npm install axios
+```
+
+third, Install dependecies on server : 
+
+```bash
+cd server
+#and
+npm install
+#and
+npm init -y
+#and
+npm install express cors dotenv
+#and
+npm install mysql2 sequelize dotenv cors express
+
+```
+
+Fourth, add env on server folder:
+
+```bash
+cd server
+#and
+#create .env
+```
+
+Fifth, run the development server:
+
+```bash
+cd server
+# and
+node server.js
+```
+
+Sixth, run the web :
+
+```bash
+cd kuding-fix
+#or if you on server
+cd ..
+#and
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+#open localhost routes
+http://localhost:{port}
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
