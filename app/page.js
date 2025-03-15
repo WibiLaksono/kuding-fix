@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "./components/navbar";
+import Hero from "./components/hero";
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -37,6 +38,7 @@ export default function Home() {
   return (
     <div className="bg-gray-100 min-h-screen text-black">
       <Navbar/>
+      <Hero/>
     </div>
   );
 }
