@@ -9,8 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.8.2",
     "lucide-react": "^0.482.0",
+=======
+    "axios": "^1.8.3",
+>>>>>>> cacc1de4042ec67c779c09398d5c8cd318666128
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
