@@ -12,10 +12,11 @@ export default function Home() {
     // Fetch data dari backend
     const fetchData = async () => {
       try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
         const [usersRes, listingsRes, transactionsRes] = await Promise.all([
-          fetch("http://localhost:5000/users"), //still debugging
-          fetch("http://localhost:5000/listings"),
-          fetch("http://localhost:5000/transactions"),
+          fetch(`${baseUrl}/users`),
+          fetch(`${baseUrl}/listings`),
+          fetch(`${baseUrl}/transactions`),
         ]);
 
         const usersData = await usersRes.json();
