@@ -9,7 +9,7 @@ export default function Hero (){
             }}
         >
             {/* Shadow Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-transparent"></div>
             
             {/* Content */}
             <div className="relative z-10 flex items-center justify-start px-20 h-full text-white text-4xl font-bold">
