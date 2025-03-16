@@ -35,7 +35,9 @@ export default function Navbar() {
               id="search"
               className="flex items-center justify-center bg-blue-300 w-16 h-8 sm:w-10 sm:h-10 rounded-full cursor-pointer"
             >
-              Cari
+              <a className="text-black">
+                Cari
+              </a>
             </button>
           </div>
 
@@ -53,7 +55,7 @@ export default function Navbar() {
                 Menu List {index + 1}
               </a>
             ))}
-            <a href="#" className="text-gray-800 text-sm">
+            <a href="#" className="text-gray-800 font-medium text-sm">
               Range Harga v
             </a>
             <a href="#" className="text-gray-800 text-sm">
@@ -67,7 +69,7 @@ export default function Navbar() {
       <div className="sm:flex flex-col w-full h-[85%] bg-white hidden">
         <div className="flex flex-row justify-center gap-16 px-10 w-full h-20 shadow-md">
           {/* Logo */}
-          <div className="flex justify-start items-center px-2 w-[30%] h-full">
+          <div className="flex justify-start items-center px-2 w-[30%] h-full ">
             <a href="#" className="text-red-600 text-xl md:text-2xl font-bold font-sans">
               Kuding
             </a>
@@ -77,13 +79,13 @@ export default function Navbar() {
           <div className="flex flex-row justify-center items-center gap-2 w-[40%] h-full ">
             <input
               placeholder="ketikkan sesuatu"
-              className="bg-white border border-gray-400 px-5 w-[80%] h-[60%] rounded-2xl"
+              className="bg-white border text-gray-800 border-gray-400 px-5 w-[80%] h-[60%] rounded-2xl"
             />
             <button
               type="button"
               name="search"
               id="search"
-              className="flex items-center justify-center bg-blue-300 w-[20%] h-[60%] rounded-full text-md cursor-pointer"
+              className="flex items-center text-black justify-center bg-blue-300 hover:bg-blue-400 w-[20%] h-[60%] rounded-full text-md cursor-pointer"
             >
               Cari
             </button>
@@ -91,21 +93,21 @@ export default function Navbar() {
 
           {/* Profil dan Notifikasi */}
           <div className="flex flex-row justify-end items-center px-2 gap-2 w-[30%] h-full">
-            <div className="w-[80%] h-[60%] border-r flex items-center justify-end px-5">
+            <div className="w-[80%] h-[60%] border-r border-gray-600 flex items-center justify-end px-5">
               {isLoggedIn ? (
                 "Kosmas Rio Legowo"
               ) : (
                 <div className="flex flex-row gap-5">
-                  <button className="text-blue-500 text-sm md:text-md cursor-pointer">
+                  <button className="text-blue-500 hover:text-blue-700 hover:border-b-2 text-sm md:text-md cursor-pointer">
                     Login
                   </button>
-                  <button className="text-blue-500 text-sm md:text-md cursor-pointer">
+                  <button className="text-blue-500 hover:text-blue-700 hover:border-b-2 text-sm md:text-md cursor-pointer">
                     Sign Up
                   </button>
                 </div>
               )}
             </div>
-            <div className="w-[20%] h-[60%] bg-amber-200 text-sm flex items-center justify-center rounded-full cursor-pointer">
+            <div className="w-[20%] h-[60%] bg-amber-200 hover:bg-amber-400 text-sm text-black flex items-center justify-center rounded-full cursor-pointer">
               Notif
             </div>
           </div>
@@ -113,19 +115,19 @@ export default function Navbar() {
 
         {/* Menu Navigasi */}
         <div className="flex flex-row justify-center px-10 w-full h-10">
-            <div className="w-[10rem] h-full flex items-center justify-center cursor-pointer">
+            <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
               Home
             </div>
-            <div className="w-[10rem] h-full flex items-center justify-center cursor-pointer">
+            <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
               Harga v
             </div>
-            <div className="w-[10rem] h-full flex items-center justify-center cursor-pointer">
+            <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
               Tipe v
             </div>
-            <div className="w-[10rem] h-full flex items-center justify-center cursor-pointer">
+            <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
               Status v
             </div>
-            <div className="w-[10rem] h-full flex items-center justify-center cursor-pointer">
+            <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
               Lokasi v
             </div>
         </div>

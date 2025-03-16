@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navbar from "./components/navbar";
 import Hero from "./components/hero";
 import Card from "./components/card";
 
@@ -38,7 +37,6 @@ export default function Home() {
 
   return (
     <div className="bg-gray-100 min-h-screen text-black">
-      <Navbar/>
       <Hero/>
       <Card/>
     </div>

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Navbar from "../../components/navbar";
 // 1) Import the Card component
 import Card from "../../components/card";
 
@@ -25,7 +24,6 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="bg-gray-100 min-h-screen text-black">
-        <Navbar />
         <div className="container mx-auto px-4 py-10">
           <p>Loading product data...</p>
         </div>
@@ -35,8 +33,6 @@ export default function ProductDetailPage() {
 
   return (
     <div className="bg-gray-100 min-h-screen text-black">
-      {/* Navbar */}
-      <Navbar />
 
       {/* Main Product Section */}
       <div className="container mx-auto px-4 py-8 pt-36">
