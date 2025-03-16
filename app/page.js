@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Hero from "./components/hero";
-import Card from "./components/card";
+import Catalog from "./components/catalog";
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div className="bg-gray-100 min-h-screen text-black">
       <Hero/>
-      <Card/>
+      <Catalog/>
     </div>
   );
 }

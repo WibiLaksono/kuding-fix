@@ -2,157 +2,83 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-// 1) Import the Card component
-import Card from "../../components/card";
+import Image from "next/image";
+import { FaStar, FaPlus, FaMinus } from "react-icons/fa";
+import { Button } from "../../components/ui/button";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
 
-  // For preview purposes, we hardcode test data here.
   useEffect(() => {
-    // Comment out the fetch code for now and set a sample product.
-    setProduct({
-      name: "Sample Product",
-      imageUrl: "https://via.placeholder.com/400",
-      description: "This is a sample product description for preview.",
-      price: "49.99",
-      reviewCount: 150,
-    });
+    if (!id) return;
+
+    const catalog = JSON.parse(localStorage.getItem("catalog")) || [];
+    const selectedProduct = catalog.find((p) => p.id === parseInt(id));
+
+    if (selectedProduct) {
+      setProduct(selectedProduct);
+    } else {
+      console.error("Product not found for ID:", id);
+    }
   }, [id]);
 
   if (!product) {
-    return (
-      <div className="bg-gray-100 min-h-screen text-black">
-        <div className="container mx-auto px-4 py-10">
-          <p>Loading product data...</p>
-        </div>
-      </div>
-    );
+    return <div className="text-center py-10">Loading product data...</div>;
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen text-black">
-
-      {/* Main Product Section */}
-      <div className="container mx-auto px-4 py-8 pt-36">
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Left Column: Product Image */}
-          <div className="md:w-1/2 flex flex-col items-center">
-            <img
-              src={product.imageUrl || "https://via.placeholder.com/400"}
-              alt={product.name}
-              className="w-full max-w-md rounded-md object-cover"
-            />
-          </div>
-
-          {/* Right Column: Product Details */}
-          <div className="md:w-1/2">
-            {/* Product Name */}
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-
-            {/* Example rating (static stars + review count) */}
-            <div className="flex items-center mb-2">
-              <span className="text-yellow-400 mr-2">★★★★☆</span>
-              <span className="text-sm text-gray-600">
-                ({product.reviewCount} reviews)
-              </span>
-            </div>
-
-            {/* Price */}
-            <p className="text-xl text-green-600 font-semibold mb-4">
-              ${product.price}
-            </p>
-
-            {/* Description */}
-            <p className="mb-4 text-gray-700">{product.description}</p>
-
-            {/* Quantity Selector (simple example) */}
-            <div className="mb-4 flex items-center gap-4">
-              <label className="text-sm text-gray-600">Quantity</label>
-              <input
-                type="number"
-                min="1"
-                defaultValue="1"
-                className="border w-16 text-center"
-              />
-            </div>
-
-            {/* Add to Cart Button */}
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Add to Cart
-            </button>
-          </div>
-        </div>
-
-        {/* Featured Products Section */}
-        <div className="mt-10">
-          <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* 2) Use <Card> for each featured product */}
-            <Card
-              productId="2"
-              category="FLOWER"
-              imageUrl="https://via.placeholder.com/150?text=Featured+1"
-              productName="Featured Product 1"
-              rating={4.5}
-              reviewCount={100}
-              strainType="Sativa"
-              oldPrice="$80.00"
-              newPrice="$60.00"
-              unit="/gram"
-            />
-            <Card
-              productId="3"
-              category="FLOWER"
-              imageUrl="https://via.placeholder.com/150?text=Featured+2"
-              productName="Featured Product 2"
-              rating={4.0}
-              reviewCount={50}
-              strainType="Indica"
-              oldPrice="$100.00"
-              newPrice="$75.00"
-              unit="/gram"
-            />
-            <Card
-              productId="4"
-              category="FLOWER"
-              imageUrl="https://via.placeholder.com/150?text=Featured+3"
-              productName="Featured Product 3"
-              rating={3.5}
-              reviewCount={20}
-              strainType="Hybrid"
-              oldPrice="$60.00"
-              newPrice="$45.00"
-              unit="/gram"
-            />
-            <Card
-              productId="5"
-              category="FLOWER"
-              imageUrl="https://via.placeholder.com/150?text=Featured+4"
-              productName="Featured Product 4"
-              rating={4.8}
-              reviewCount={200}
-              strainType="Sativa"
-              oldPrice="$120.00"
-              newPrice="$90.00"
-              unit="/gram"
-            />
-          </div>
-        </div>
+    <div className="bg-gray-100 container mx-auto px-4 py-20 flex flex-col md:flex-row gap-8">
+      <div className="md:w-1/2 flex flex-col items-center text-black">
+        <Image src={product.imageUrl} alt={product.name} width={400} height={400} className="rounded-md" />
       </div>
-
-      {/* 20% Off Banner */}
-      <div className="bg-gray-200 py-6 mt-10">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-xl font-bold mb-2">UNLOCK 20% OFF YOUR FIRST ORDER</h3>
-          <p>Subscribe to our newsletter to get your discount code</p>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded mt-4 hover:bg-blue-700">
-            Sign Up
-          </button>
+      <div className="md:w-1/2 text-black">
+        <h1 className="text-3xl font-bold">{product.name}</h1>
+        <div className="flex items-center gap-2 mt-2 text-yellow-500">
+          <FaStar /> <span>{product.rating} / 5</span>
+          <span className="text-gray-500">({product.reviewCount} Reviews)</span>
         </div>
+        <div className="mt-2">
+          {product.oldPrice && <span className="line-through text-gray-500">{product.oldPrice}</span>}
+          <span className="text-green-600 text-2xl font-bold ml-2">{product.newPrice}</span>
+        </div>
+        <div className="mt-4 bg-gray-100 p-4 rounded-md">
+          <p className="font-semibold">Category:</p>
+          <p>{product.category}</p>
+        </div>
+        <div className="mt-2 bg-gray-100 p-4 rounded-md">
+          <p className="font-semibold">Condition:</p>
+          <p>{product.condition}</p>
+        </div>
+        {product.isPromo && (
+          <div className="mt-2 bg-yellow-100 p-4 rounded-md">
+            <p className="font-semibold">Promo:</p>
+            <p>{product.promoLabel}</p>
+          </div>
+        )}
+        <div className="mt-6 flex items-center gap-4">
+          <Button onClick={() => setQuantity((q) => Math.max(1, q - 1))}><FaMinus /></Button>
+          <span className="text-xl">{quantity}</span>
+          <Button onClick={() => setQuantity((q) => q + 1)}><FaPlus /></Button>
+        </div>
+        <Button
+          className="bg-green-600 text-white px-6 py-3 rounded-md mt-4"
+          onClick={() => {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingIndex = cart.findIndex((item) => item.id === product.id);
+            if (existingIndex !== -1) {
+              cart[existingIndex].quantity += quantity;
+            } else {
+              cart.push({ id: product.id, name: product.name, imageUrl: product.imageUrl, price: product.newPrice, quantity });
+            }
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert(`${product.name} added to cart!`);
+          }}
+        >
+          Add to Cart - {product.newPrice * quantity}
+        </Button>
       </div>
-
     </div>
   );
 }
