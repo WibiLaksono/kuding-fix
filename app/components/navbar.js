@@ -66,7 +66,7 @@ export default function Navbar() {
       role: formData.get("role"),
     };
 
-    console.log("Payload yang dikirim:", newUser); 
+    console.log("Payload yang dikirim:", newUser);
 
     const baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
@@ -171,35 +171,35 @@ export default function Navbar() {
             </button>
           </div>
 
-        {/* Profil dan Notifikasi */}
-                  <div className="flex flex-row justify-end items-center px-2 gap-2 w-[30%] h-full">
-                    <div className="w-[80%] h-[60%] border-r border-gray-600 flex items-center justify-end px-5">
-                      {user ? (
-                        `${user.first_name} ${user.last_name}`
-                      ) : (
-                        <div className="flex flex-row gap-5">
-                          <button
-                            className="text-blue-500 hover:text-blue-700 hover:border-b-2 text-sm md:text-md cursor-pointer"
-                            onClick={() => setShowLoginModal(true)}
-                          >
-                            Login
-                          </button>
-                          <button
-                            className="text-blue-500 hover:text-blue-700 hover:border-b-2 text-sm md:text-md cursor-pointer"
-                            onClick={() => setShowSignUpModal(true)}
-                          >
-                            Sign Up
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <div className="w-[20%] h-[60%] bg-amber-200 hover:bg-amber-400 text-sm text-black flex items-center justify-center rounded-full cursor-pointer">
-                      Notif
-                    </div>
-                  </div>
+          {/* Profil dan Notifikasi */}
+          <div className="flex flex-row justify-end items-center px-2 gap-2 w-[30%] h-full">
+            <div className="w-[80%] h-[60%] border-r border-gray-600 flex items-center justify-end px-5">
+              {user ? (
+                `${user.first_name} ${user.last_name}`
+              ) : (
+                <div className="flex flex-row gap-5">
+                  <button
+                    className="text-blue-500 hover:text-blue-700 hover:border-b-2 text-sm md:text-md cursor-pointer"
+                    onClick={() => setShowLoginModal(true)}
+                  >
+                    Login
+                  </button>
+                  <button
+                    className="text-blue-500 hover:text-blue-700 hover:border-b-2 text-sm md:text-md cursor-pointer"
+                    onClick={() => setShowSignUpModal(true)}
+                  >
+                    Sign Up
+                  </button>
                 </div>
+              )}
+            </div>
+            <div className="w-[20%] h-[60%] bg-amber-200 hover:bg-amber-400 text-sm text-black flex items-center justify-center rounded-full cursor-pointer">
+              Notif
+            </div>
+          </div>
+        </div>
 
-                {/* Menu Navigasi */}
+        {/* Menu Navigasi */}
         <div className="flex flex-row justify-center px-10 w-full h-10">
           <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
             Home

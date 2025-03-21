@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import ProductList from "../../../components/ProductList";
+import ProductList from "../components/ProductList";
 
 export default function CatalogPage() {
   // Price range: minimum default 0, maksimum default empty string

@@ -216,7 +216,7 @@
 "use client";
 
 import { useMemo } from "react";
-import ProductCard from "./ProductCard"; // Sesuaikan path-nya
+import ProductCard from "./ui/ProductCard"; // Sesuaikan path-nya
 
 export default function ProductList({ selectedCategories, priceRange, sortOption }) {
   // Data dummy untuk 9 produk
