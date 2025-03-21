@@ -4,8 +4,24 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Card(props) {
-  const { id, productName, imageUrl, condition, description, price } = props;
+  const { id, productName, condition, description, price } = props;
   const router = useRouter(); // Gunakan useRouter untuk navigasi
+
+  const imageUrls = [
+    "camera.jpg",
+    "console.jpg",
+    "headphones.jpg",
+    "jaket.jpg",
+    "jekk.jpg",
+    "laptop.jpg",
+    "phone.jpg",
+    "shoes.jpg",
+    "speaker.jpg",
+    "watch.jpg"
+  ];
+
+  const randomIndex = Math.floor(Math.random() * imageUrls.length);
+  const imageUrl = imageUrls[randomIndex];
 
   const handleBuyNow = (event) => {
     event.stopPropagation(); // Mencegah event bubbling agar tidak trigger link luar

@@ -16,9 +16,9 @@ export default function Catalog() {
       try {
         const baseUrl =
           process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
-        const response = await fetch(`${baseUrl}/listings`);
+        const response = await fetch(`${baseUrl}/listing`);
         const data = await response.json();
-        setListings(data);
+        setListings(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -27,15 +27,16 @@ export default function Catalog() {
     fetchData();
   }, []);
 
-  // Filter listings berdasarkan condition
+  // Filter listings based on condition
   const filteredListings = listings.filter(
-    (listing) => listing.condition.toLowerCase() === activeCondition.toLowerCase()
+    (listing) =>
+      listing.condition.toLowerCase() === activeCondition.toLowerCase()
   );
 
-  // Hitung total halaman
+  // Calculate total pages
   const totalPages = Math.ceil(filteredListings.length / itemsPerPage);
 
-  // Dapatkan data untuk halaman saat ini
+  // Get data for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedListings = filteredListings.slice(startIndex, endIndex);
@@ -43,15 +44,14 @@ export default function Catalog() {
   return (
     <div className="max-w-6xl mx-auto px-6">
       <h1 className="text-4xl font-bold text-center my-6">CHOOSE YOUR STUFF</h1>
-
-      {/* Tombol Filter Condition */}
+      {/* Filter Condition Buttons */}
       <div className="flex justify-center gap-4 mb-6">
         {["new", "Used", "Refurbished"].map((condition) => (
           <button
             key={condition}
             onClick={() => {
               setActiveCondition(condition);
-              setCurrentPage(1); // Reset halaman ke awal saat filter berubah
+              setCurrentPage(1); // Reset page to the beginning when filter changes
             }}
             className={clsx(
               "px-4 py-2 rounded-full border transition-all",
@@ -65,7 +65,7 @@ export default function Catalog() {
         ))}
       </div>
 
-      {/* Menampilkan Kartu Produk */}
+      {/* Display Product Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {paginatedListings.map((listing) => (
           <Card
@@ -92,7 +92,9 @@ export default function Catalog() {
           Page {currentPage} of {totalPages}
         </span>
         <button
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
           disabled={currentPage === totalPages}
           className="px-4 py-2 bg-gray-300 text-gray-700 rounded disabled:opacity-50"
         >

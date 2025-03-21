@@ -5,36 +5,6 @@ import Hero from "./components/hero";
 import Catalog from "./components/catalog";
 
 export default function Home() {
-  const [users, setUsers] = useState([]);
-  const [listings, setListings] = useState([]);
-  const [transactions, setTransactions] = useState([]);
-
-  useEffect(() => {
-    // Fetch data dari backend
-    const fetchData = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
-        const [usersRes, listingsRes, transactionsRes] = await Promise.all([
-          fetch(`${baseUrl}/users`),
-          fetch(`${baseUrl}/listings`),
-          fetch(`${baseUrl}/transactions`),
-        ]);
-
-        const usersData = await usersRes.json();
-        const listingsData = await listingsRes.json();
-        const transactionsData = await transactionsRes.json();
-
-        setUsers(usersData);
-        setListings(listingsData);
-        setTransactions(transactionsData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <div className="bg-gray-100 min-h-screen text-black">
       <Hero/>
@@ -75,38 +45,38 @@ export default function Home() {
 //     </div>
 //   </section>
 
-//   {/* Table Listings */}
-//   <section className="mb-10">
-//     <h2 className="text-2xl font-semibold mb-4">Listings</h2>
-//     <div className="overflow-y-auto bg-white shadow-md rounded-lg p-4 max-h-96">
-//       <table className="w-full border-collapse border border-gray-200">
-//         <thead className="bg-gray-200">
-//           <tr>
-//             <th className="border p-2">ID</th>
-//             <th className="border p-2">Title</th>
-//             <th className="border p-2">Description</th>
-//             <th className="border p-2">Price</th>
-//             <th className="border p-2">Condition</th>
-//             <th className="border p-2">Status</th>
-//             <th className="border p-2">Owner</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {listings.slice(0, 20).map((listing) => (
-//             <tr key={listing.id} className="hover:bg-gray-100">
-//               <td className="border p-2 text-center">{listing.id}</td>
-//               <td className="border p-2">{listing.title}</td>
-//               <td className="border p-2">{listing.description}</td>
-//               <td className="border p-2 text-center">{listing.price}</td>
-//               <td className="border p-2 text-center">{listing.condition}</td>
-//               <td className="border p-2 text-center">{listing.status}</td>
-//               <td className="border p-2">{listing.User?.username}</td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   </section>
+  // {/* Table Listings */}
+  // <section className="mb-10">
+  //   <h2 className="text-2xl font-semibold mb-4">Listings</h2>
+  //   <div className="overflow-y-auto bg-white shadow-md rounded-lg p-4 max-h-96">
+  //     <table className="w-full border-collapse border border-gray-200">
+  //       <thead className="bg-gray-200">
+  //         <tr>
+  //           <th className="border p-2">ID</th>
+  //           <th className="border p-2">Title</th>
+  //           <th className="border p-2">Description</th>
+  //           <th className="border p-2">Price</th>
+  //           <th className="border p-2">Condition</th>
+  //           <th className="border p-2">Status</th>
+  //           <th className="border p-2">Owner</th>
+  //         </tr>
+  //       </thead>
+  //       <tbody>
+  //         {listings.slice(0, 20).map((listing) => (
+  //           <tr key={listing.id} className="hover:bg-gray-100">
+  //             <td className="border p-2 text-center">{listing.id}</td>
+  //             <td className="border p-2">{listing.title}</td>
+  //             <td className="border p-2">{listing.description}</td>
+  //             <td className="border p-2 text-center">{listing.price}</td>
+  //             <td className="border p-2 text-center">{listing.condition}</td>
+  //             <td className="border p-2 text-center">{listing.status}</td>
+  //             <td className="border p-2">{listing.User?.username}</td>
+  //           </tr>
+  //         ))}
+  //       </tbody>
+  //     </table>
+  //   </div>
+  // </section>
 
 //   {/* Table Transactions */}
 //   <section>

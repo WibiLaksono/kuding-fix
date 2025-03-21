@@ -7,6 +7,8 @@ export default function Navbar() {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [user, setUser] = useState(null);
+    const navMenus = ["Home", "Harga", "Tipe", "Status", "Lokasi"];
+
     useEffect(() => {
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
         const token = localStorage.getItem("token");
@@ -31,7 +33,7 @@ export default function Navbar() {
         const formData = new FormData(e.target);
         const credentials = Object.fromEntries(formData);
         try {
-            const res = await fetch(`${baseUrl}/auth/login`, {
+            const res = await fetch(`${baseUrl}/users/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(credentials),
@@ -53,13 +55,13 @@ export default function Navbar() {
         const newUser = Object.fromEntries(formData);
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
         try {
-            const res = await fetch(`${baseUrl}/auth/register`, {
+            const res = await fetch(`${baseUrl}/users/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newUser),
             });
             const data = await res.json();
-            if (data.user) setUser(data.user);
+            if (data.users) setUser(data.users);
             setShowSignUpModal(false);
         } catch (error) {
             console.error("Sign up failed:", error);

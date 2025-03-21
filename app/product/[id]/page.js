@@ -3,43 +3,71 @@
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaMinus, FaPlus } from "react-icons/fa";
 import { Button } from "../../components/ui/button";
+
+const imageUrls = [
+  "/camera.jpg",
+  "/console.jpg",
+  "/headphones.jpg",
+  "/jacket.jpg",
+  "/jack.jpg",
+  "/laptop.jpg",
+  "/phone.jpg",
+  "/shoes.jpg",
+  "/speaker.jpg",
+  "/watch.jpg"
+];
+
+function getRandomImageUrl() {
+  const randomIndex = Math.floor(Math.random() * imageUrls.length);
+  return imageUrls[randomIndex];
+}
 
 export default function ProductDetailPage() {
   const { id } = useParams();
+  console.log("Product ID from URL:", id);
   const router = useRouter();
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
+    console.log("Fetching product with ID:", id);
     if (!id) return;
+  
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/listing/${id}`);
+        console.log("Fetch Response Status:", res.status);
+        const data = await res.json();
+        if (res.status === 404) {
+          console.error("Product not found for ID:", id);
+          setProduct(null);
+          return;
+        }
+        if (res.status !== 200) {
+          console.error("Unexpected error:", res.status);
+          return;
+        }
+        setProduct(data);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    };
 
-    const rawCatalog = localStorage.getItem("catalog");
-    console.log("Raw catalog from localStorage:", rawCatalog);
-
-    const catalog = JSON.parse(rawCatalog) || [];
-    const selectedProduct = catalog.find((p) => p.id === parseInt(id)); // Ganti productId -> id
-
-    if (selectedProduct) {
-      setProduct(selectedProduct);
-    } else {
-      console.error("Product not found for ID:", id);
-    }
+    fetchProduct();
   }, [id]);
+  
 
   if (!product) {
     return <div className="text-center py-10">Loading product data...</div>;
   }
 
-  // Handle Buy Now
   const handleBuyNow = () => {
     router.push(
       `/checkout?productId=${product.id}&name=${encodeURIComponent(
-        product.productName
+        product.title
       )}&price=${encodeURIComponent(
         product.price
-      )}&imageUrl=${encodeURIComponent(product.imageUrl)}&quantity=${quantity}`
+      )}&imageUrl=${encodeURIComponent(product.imageUrl)}`
     );
   };
 
@@ -47,15 +75,15 @@ export default function ProductDetailPage() {
     <div className="bg-gray-100 container mx-auto px-4 py-20 flex flex-col md:flex-row gap-8">
       <div className="md:w-1/2 flex flex-col items-center text-black">
         <Image
-          src={product.imageUrl}
-          alt={product.productName}
+          src={getRandomImageUrl()}
+          alt={product.title}
           width={400}
           height={400}
           className="rounded-md"
         />
       </div>
       <div className="md:w-1/2 text-black">
-        <h1 className="text-3xl font-bold">{product.productName}</h1>
+        <h1 className="text-3xl font-bold">{product.title}</h1>
         <div className="mt-2 bg-gray-100 p-4 rounded-md">
           <p className="font-semibold">Condition:</p>
           <p>{product.condition}</p>
@@ -65,20 +93,11 @@ export default function ProductDetailPage() {
             {product.price}
           </span>
         </div>
-        <div className="mt-6 flex items-center gap-4">
-          <Button onClick={() => setQuantity((q) => Math.max(1, q - 1))}>
-            <FaMinus />
-          </Button>
-          <span className="text-xl">{quantity}</span>
-          <Button onClick={() => setQuantity((q) => q + 1)}>
-            <FaPlus />
-          </Button>
-        </div>
         <Button
           className="bg-blue-600 text-white px-6 py-3 rounded-md mt-4"
           onClick={handleBuyNow}
         >
-          Buy Now - {product.price * quantity}
+          Buy Now - {product.price}
         </Button>
       </div>
     </div>

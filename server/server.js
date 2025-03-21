@@ -1,6 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const sequelize = require("./config/database");
+const { Sequelize } = require("sequelize");
 const User = require("./models/User");
 const Listing = require("./models/Listing");
 const Transaction = require("./models/Transaction");
@@ -15,38 +16,41 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+
+// Database connection
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST || "localhost",
+  dialect: "mysql",
 });
 
-// Endpoint Get Users (tanpa password)
-app.get("/users", async (req, res) => {
+sequelize.authenticate()
+  .then(() => console.log("Database connected successfully"))
+  .catch(err => console.error("Database connection error:", err));
+
+// Define model associations
+User.hasMany(Listing, { foreignKey: "user_id" });
+Listing.belongsTo(User, { foreignKey: "user_id" });
+Transaction.belongsTo(User, { as: "BuyerUser", foreignKey: "buyer_id" }); // Rename alias
+Transaction.belongsTo(User, { as: "SellerUser", foreignKey: "seller_id" }); // Rename alias
+Transaction.belongsTo(Listing, { foreignKey: "listing_id" });
+
+// Routes
+app.get("/users", async (_, res) => {
   try {
-    const users = await User.findAll({
-      attributes: { exclude: ["password"] }, // Exclude password
-    });
+    const users = await User.findAll({ attributes: { exclude: ["password"] } });
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Endpoint Register User
-app.post("/auth/register", async (req, res) => {
-  console.log("Request received at /auth/register:", req.body);
+app.post("/users/register", async (req, res) => {
+  console.log("Request received at /users/register:", req.body);
   const { username, first_name, last_name, email, phone_number, address, role, join_date, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
-      username,
-      first_name,
-      last_name,
-      email,
-      phone_number,
-      address,
-      role,
-      join_date,
-      password: hashedPassword
+      username, first_name, last_name, email, phone_number, address, role, join_date, password: hashedPassword
     });
     res.status(201).json({ message: "User registered successfully", user: newUser });
   } catch (error) {
@@ -55,43 +59,56 @@ app.post("/auth/register", async (req, res) => {
   }
 });
 
-// Endpoint Login User
-app.post("/auth/login", async (req, res) => {
+app.post("/users/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid password" });
-    }
-    const token = jwt.sign({ id: user.id, email: user.email }, "your_jwt_secret", { expiresIn: "1h" });
+    const users = await User.findOne({ where: { email } });
+    if (!users) return res.status(404).json({ error: "User not found" });
+    
+    const isPasswordValid = await bcrypt.compare(password, users.password);
+    if (!isPasswordValid) return res.status(401).json({ error: "Invalid password" });
+    
+    const token = jwt.sign({ id: user.id, email: users.email }, "your_jwt_secret", { expiresIn: "1h" });
     res.json({ message: "Login successful", token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Endpoint Get Listings
-app.get("/listings", async (req, res) => {
+app.get("/listing", async (_, res) => {
   try {
+    
     const listings = await Listing.findAll({ include: { model: User, attributes: ["username", "email"] } });
+    console.log("Listings Data:", listings);
     res.json(listings);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Endpoint Get Transactions
-app.get("/transactions", async (req, res) => {
+app.get("/listing/:id", async (req, res) => {
+  try {
+    console.log("Fetching product with ID:", req.params.id); // Debugging log
+    const listing = await Listing.findByPk(req.params.id);
+    if (!listing) {
+      console.log("Product not found in database:", req.params.id);
+      return res.status(404).json({ error: "Product not found" });
+    }
+    res.json(listing);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+app.get("/transactions", async (_, res) => {
   try {
     const transactions = await Transaction.findAll({
       include: [
-        { model: User, as: "Buyer", attributes: ["username", "email"] },
-        { model: User, as: "Seller", attributes: ["username", "email"] },
-        { model: Listing, as: "Listing", attributes: ["title", "price"] },
+        { model: User, as: "BuyerUser", attributes: ["username", "email"] },
+        { model: User, as: "SellerUser", attributes: ["username", "email"] },
+        { model: Listing, attributes: ["title", "price"] },
       ],
     });
     res.json(transactions);
@@ -100,7 +117,7 @@ app.get("/transactions", async (req, res) => {
   }
 });
 
-app.listen(PORT, async () => {
-  await sequelize.sync(); // Sync database
-  console.log(`Server running on http://localhost:${PORT}`);
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
