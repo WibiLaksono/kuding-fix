@@ -11,21 +11,29 @@ const jwt = require("jsonwebtoken");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Database connection
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST || "localhost",
-  dialect: "mysql",
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST || "localhost",
+    dialect: "mysql",
+  }
+);
 
-sequelize.authenticate()
+sequelize
+  .authenticate()
   .then(() => console.log("Database connected successfully"))
-  .catch(err => console.error("Database connection error:", err));
+  .catch((err) => console.error("Database connection error:", err));
 
 // Define model associations
 User.hasMany(Listing, { foreignKey: "user_id" });
@@ -33,6 +41,11 @@ Listing.belongsTo(User, { foreignKey: "user_id" });
 Transaction.belongsTo(User, { as: "BuyerUser", foreignKey: "buyer_id" }); // Rename alias
 Transaction.belongsTo(User, { as: "SellerUser", foreignKey: "seller_id" }); // Rename alias
 Transaction.belongsTo(Listing, { foreignKey: "listing_id" });
+
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
+});
 
 // Routes
 app.get("/users", async (_, res) => {
@@ -44,15 +57,68 @@ app.get("/users", async (_, res) => {
   }
 });
 
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: "Access denied. No token provided." });
+
+  const token = authHeader.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Invalid token format." });
+
+  jwt.verify(token, "your_jwt_secret", async (err, decoded) => {
+    if (err) return res.status(403).json({ error: "Invalid token." });
+
+    try {
+      const user = await User.findByPk(decoded.id, { attributes: { exclude: ["password"] } });
+      if (!user) return res.status(404).json({ error: "User not found." });
+
+      req.user = user;
+      next();
+    } catch (error) {
+      return res.status(500).json({ error: "Internal server error." });
+    }
+  });
+};
+
+
+app.get("/users/me", authenticateToken, (req, res) => {
+  res.json(req.user);
+});
+
+
 app.post("/users/register", async (req, res) => {
-  console.log("Request received at /users/register:", req.body);
-  const { username, first_name, last_name, email, phone_number, address, role, join_date, password } = req.body;
+  console.log("Incoming request: POST /users/register");
+  console.log("Request body:", req.body);
+  const {
+    username,
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    address,
+    role,
+    join_date,
+    password,
+  } = req.body;
   try {
+    console.log("Password before hashing:", password);
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Password after hashing:", hashedPassword);
+
     const newUser = await User.create({
-      username, first_name, last_name, email, phone_number, address, role, join_date, password: hashedPassword
+      username,
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      address,
+      role,
+      join_date,
+      password: hashedPassword,
     });
-    res.status(201).json({ message: "User registered successfully", user: newUser });
+
+    res
+      .status(201)
+      .json({ message: "User registered successfully", user: newUser });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ error: error.message });
@@ -61,24 +127,46 @@ app.post("/users/register", async (req, res) => {
 
 app.post("/users/login", async (req, res) => {
   const { email, password } = req.body;
+  console.log("Request body:", req.body);
+
   try {
-    const users = await User.findOne({ where: { email } });
-    if (!users) return res.status(404).json({ error: "User not found" });
+    console.log("Mencari user dengan email:", email);
+    const user = await User.findOne({ where: { email } }); // Gunakan 'user' bukan 'users'
+
+    if (!user) {
+      console.error("User not found");
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    console.log("User ditemukan:", user);
     
-    const isPasswordValid = await bcrypt.compare(password, users.password);
-    if (!isPasswordValid) return res.status(401).json({ error: "Invalid password" });
-    
-    const token = jwt.sign({ id: user.id, email: users.email }, "your_jwt_secret", { expiresIn: "1h" });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid){
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    console.log("Membuat token untuk user:", user.id);
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      "your_jwt_secret",
+      { expiresIn: "1h" }
+    );
+
+    console.log("Token generated:", token);
     res.json({ message: "Login successful", token });
+
   } catch (error) {
+    console.log("Login error:", error); 
     res.status(500).json({ error: error.message });
   }
 });
 
 app.get("/listing", async (_, res) => {
   try {
-    
-    const listings = await Listing.findAll({ include: { model: User, attributes: ["username", "email"] } });
+    const listings = await Listing.findAll({
+      include: { model: User, attributes: ["username", "email"] },
+    });
     console.log("Listings Data:", listings);
     res.json(listings);
   } catch (error) {
@@ -100,7 +188,6 @@ app.get("/listing/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 app.get("/transactions", async (_, res) => {
   try {
