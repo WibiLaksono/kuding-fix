@@ -5,7 +5,7 @@ const { Sequelize } = require("sequelize");
 const User = require("./models/User");
 const Listing = require("./models/Listing");
 const Transaction = require("./models/Transaction");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const app = express();
