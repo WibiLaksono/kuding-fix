@@ -8,7 +8,7 @@ export default function Catalog() {
   const [listings, setListings] = useState([]);
   const [activeCondition, setActiveCondition] = useState("new");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 16;
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
     // Fetch data from backend
@@ -25,7 +25,21 @@ export default function Catalog() {
     };
 
     fetchData();
+
+    // Update screen size state
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 640);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
+
+  const itemsPerPage = isSmallScreen ? 8 : 16;
 
   // Filter listings based on condition
   const filteredListings = listings.filter(
@@ -43,7 +57,7 @@ export default function Catalog() {
 
   return (
     <div className="max-w-6xl mx-auto px-6">
-      <h1 className="text-4xl font-bold text-center my-6">CHOOSE YOUR STUFF</h1>
+      <h1 className="text-4xl font-bold text-center my-6">RECOMENDATION STUFF FOR YOU 💖</h1>
       {/* Filter Condition Buttons */}
       <div className="flex justify-center gap-4 mb-6">
         {["new", "Used", "Refurbished"].map((condition) => (
@@ -56,30 +70,30 @@ export default function Catalog() {
             className={clsx(
               "px-4 py-2 rounded-full border transition-all",
               activeCondition === condition
-                ? "bg-green-100 text-green-700 border-green-700"
-                : "border-gray-300 text-gray-700 hover:bg-gray-200"
+              ? "bg-green-100 text-green-700 border-green-700"
+              : "border-gray-300 text-gray-700 hover:bg-gray-200"
             )}
-          >
+            >
             {condition.charAt(0).toUpperCase() + condition.slice(1)}
-          </button>
-        ))}
-      </div>
+            </button>
+          ))}
+          </div>
 
-      {/* Display Product Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {paginatedListings.map((listing) => (
-          <Card
+          {/* Display Product Cards */}
+          <div className="flex flex-wrap justify-center gap-6">
+          {paginatedListings.map((listing) => (
+            <Card
             key={listing.id}
             id={listing.id}
             productName={listing.title}
             condition={listing.condition}
             description={listing.description}
             price={`$${listing.price}`}
-          />
-        ))}
-      </div>
+            />
+          ))}
+          </div>
 
-      {/* Pagination Controls */}
+          {/* Pagination Controls */}
       <div className="flex justify-center mt-6 gap-2">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}

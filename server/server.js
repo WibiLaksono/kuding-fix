@@ -176,18 +176,28 @@ app.get("/listing", async (_, res) => {
 
 app.get("/listing/:id", async (req, res) => {
   try {
-    console.log("Fetching product with ID:", req.params.id); // Debugging log
-    const listing = await Listing.findByPk(req.params.id);
+    console.log("Fetching product with ID:", req.params.id);
+
+    // Ambil data produk sekaligus dengan informasi user pemiliknya
+    const listing = await Listing.findByPk(req.params.id, {
+      include: {
+        model: User,
+        attributes: ["username", "email", "phone_number", "address"], // Ambil informasi tambahan dari user
+      },
+    });
+
     if (!listing) {
       console.log("Product not found in database:", req.params.id);
       return res.status(404).json({ error: "Product not found" });
     }
+
     res.json(listing);
   } catch (error) {
     console.error("Error fetching product:", error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 app.get("/transactions", async (_, res) => {
   try {

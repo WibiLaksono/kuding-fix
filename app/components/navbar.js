@@ -1,5 +1,6 @@
 "use client";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -7,24 +8,42 @@ export default function Navbar() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [user, setUser] = useState(null);
-  const navMenus = ["Home", "Harga", "Tipe", "Status", "Lokasi"];
+
+  // Menu navigasi yang akan digunakan di mobile & desktop
+  const navMenus = [
+    { name: "Home", link: "/" },
+    { name: "All Product", link: "/list" },
+  ];
 
   useEffect(() => {
     const baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
     const token = localStorage.getItem("token");
+
     if (token) {
       const fetchUser = async () => {
         try {
           const res = await fetch(`${baseUrl}/users/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
+
           const data = await res.json();
-          if (data) setUser(data);
+
+          if (res.ok) {
+            setUser(data);
+          } else {
+            // Jika token tidak valid, anggap user logout
+            console.error("Session expired or invalid token:", data.error);
+            localStorage.removeItem("token"); // Hapus token dari localStorage
+            setUser(null); // Reset state user
+          }
         } catch (error) {
           console.error("Error fetching user data:", error);
+          localStorage.removeItem("token");
+          setUser(null);
         }
       };
+
       fetchUser();
     }
   }, []);
@@ -126,33 +145,42 @@ export default function Navbar() {
 
         {/* Dropdown Menu */}
         {isOpen && (
-          <div className="absolute top-20 left-0 w-full bg-white shadow-md py-3 flex flex-col items-center gap-3 ">
-            {navMenus.map((_, index) => (
-              <a key={index} href="#" className="text-gray-800 text-sm ">
-                Menu List {index + 1}
+          <div className="absolute top-20 left-0 w-full bg-white shadow-md py-3 flex flex-col items-center gap-3">
+            {navMenus.map((menu, index) => (
+              <a key={index} href={menu.link} className="text-gray-800 text-sm">
+                {menu.name}
               </a>
             ))}
-            <a href="#" className="text-gray-800 font-medium text-sm">
-              Range Harga v
-            </a>
-            <a href="#" className="text-gray-800 text-sm">
-              Lokasi v
-            </a>
+            {!user && (
+              <>
+                <button
+                  className="text-blue-500"
+                  onClick={() => setShowLoginModal(true)}
+                >
+                  Login
+                </button>
+                <button
+                  className="text-blue-500"
+                  onClick={() => setShowSignUpModal(true)}
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
 
       {/* Desktop Mode */}
       <div className="sm:flex flex-col w-full h-[85%] bg-white hidden">
-        <div className="flex flex-row justify-center gap-16 px-10 w-full h-20 shadow-md">
+        <div className="flex flex-row justify-between gap-16 px-10 w-full h-[65%] shadow-md">
           {/* Logo */}
-          <div className="flex justify-start items-center px-2 w-[30%] h-full ">
-            <a
-              href="#"
-              className="text-red-600 text-xl md:text-2xl font-bold font-sans"
-            >
-              Kuding
-            </a>
+          <div className="flex justify-start items-center px-2 w-[30%] h-full">
+            <Link href="/" legacyBehavior>
+              <a className="text-red-600 text-xl md:text-2xl font-bold font-sans">
+                Kuding
+              </a>
+            </Link>
           </div>
 
           {/* Search Bar */}
@@ -200,22 +228,16 @@ export default function Navbar() {
         </div>
 
         {/* Menu Navigasi */}
-        <div className="flex flex-row justify-center px-10 w-full h-10">
-          <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
-            Home
-          </div>
-          <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
-            Harga v
-          </div>
-          <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
-            Tipe v
-          </div>
-          <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
-            Status v
-          </div>
-          <div className="w-[10rem] h-full text-gray-800 hover:text-gray-600 flex items-center justify-center cursor-pointer">
-            Lokasi v
-          </div>
+        <div className="flex flex-row justify-center items-center gap-10 w-screen h-[35%]">
+          {navMenus.map((menu, index) => (
+            <a
+              key={index}
+              href={menu.link}
+              className="text-gray-800 hover:text-gray-600"
+            >
+              {menu.name}
+            </a>
+          ))}
         </div>
       </div>
 
