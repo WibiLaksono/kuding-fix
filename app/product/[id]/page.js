@@ -100,7 +100,7 @@ export default function ProductDetailPage() {
             <h1 className="text-3xl font-bold text-black">{product.title}</h1>
             <p className="text-gray-600 mt-2">Condition: {product.condition}</p>
             <p className="text-red-500 text-2xl font-bold mt-3">
-              {product.price}
+              ${product.price}
             </p>
             <p className="mt-4 text-gray-700">{product.description}</p>
 
