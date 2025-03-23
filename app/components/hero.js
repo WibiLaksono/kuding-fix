@@ -1,10 +1,25 @@
 "use client";
 
+import { FiCheckCircle, FiCreditCard, FiTruck } from "react-icons/fi";
+
+// Komponen reusable untuk feature cards
+function FeatureCard({ icon, title, text }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="w-16 h-16 flex items-center justify-center bg-white rounded-full shadow-lg">
+        {icon}
+      </div>
+      <h3 className="text-base md:text-lg font-semibold mt-4">{title}</h3>
+      <p className="text-gray-600 text-xs md:text-sm mt-2">{text}</p>
+    </div>
+  );
+}
+
 export default function Hero() {
   return (
     <>
       {/* Hero Section */}
-      <div className="relative w-full h-[90vh] flex items-center justify-start bg-cover bg-center">
+      <div className="relat</div>ive w-full h-[90vh] flex items-center justify-start bg-cover bg-center">
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -48,59 +63,26 @@ export default function Hero() {
       <div className="w-full bg-gray-100 py-8 md:py-12">
         <div className="max-w-6xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {/* Feature 1 */}
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-white rounded-full shadow-lg">
-                <img
-                  src="/icons/shipping.svg"
-                  alt="Shipping"
-                  className="w-8 h-8 md:w-10 md:h-10"
-                />
-              </div>
-              <h3 className="text-base md:text-lg font-semibold mt-4">
-                Reliable Shipping
-              </h3>
-              <p className="text-gray-600 text-xs md:text-sm mt-2">
-                Kuding wants to make sure the item you buy has the quality you
-                want by checking it directly with the buyer.
-              </p>
-            </div>
+            {/* Feature 1: Shipping */}
+            <FeatureCard
+              icon={<FiTruck className="w-10 h-10 text-blue-600" />}
+              title="Reliable Shipping"
+              text="LOAX wants to make sure the item you buy has the quality you want by checking it directly with the buyer."
+            />
 
-            {/* Feature 2 */}
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-white rounded-full shadow-lg">
-                <img
-                  src="/icons/payment.svg"
-                  alt="Payment"
-                  className="w-8 h-8 md:w-10 md:h-10"
-                />
-              </div>
-              <h3 className="text-base md:text-lg font-semibold mt-4">
-                You’re Safe With Us
-              </h3>
-              <p className="text-gray-600 text-xs md:text-sm mt-2">
-                Our secure payment system accepts the most common forms of
-                payments making the checkout process quicker!
-              </p>
-            </div>
+            {/* Feature 2: Payment */}
+            <FeatureCard
+              icon={<FiCreditCard className="w-10 h-10 text-green-600" />}
+              title="You’re Safe With Us"
+              text="Our secure payment system accepts the most common forms of payments making the checkout process quicker!"
+            />
 
-            {/* Feature 3 */}
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-white rounded-full shadow-lg">
-                <img
-                  src="/icons/quality.svg"
-                  alt="Quality"
-                  className="w-8 h-8 md:w-10 md:h-10"
-                />
-              </div>
-              <h3 className="text-base md:text-lg font-semibold mt-4">
-                Best Quality & Pricing
-              </h3>
-              <p className="text-gray-600 text-xs md:text-sm mt-2">
-                Here at Kuding, we take pride in the quality of our products and
-                service. Our prices are set to ensure you get the best.
-              </p>
-            </div>
+            {/* Feature 3: Quality */}
+            <FeatureCard
+              icon={<FiCheckCircle className="w-10 h-10 text-yellow-600" />}
+              title="Best Quality & Pricing"
+              text="Here at LOAX, we take pride in the quality of our products and service. Our prices are set to ensure you get the best."
+            />
           </div>
         </div>
       </div>

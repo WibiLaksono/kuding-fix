@@ -118,7 +118,7 @@ export default function Navbar() {
         <div className="flex flex-row justify-between items-center px-5 w-full h-full">
           {/* Logo */}
           <a href="#" className="text-red-600 text-xl font-bold font-sans">
-            Kuding
+            LOAX
           </a>
 
           {/* Search Bar */}
@@ -178,7 +178,7 @@ export default function Navbar() {
           <div className="flex justify-start items-center px-2 w-[30%] h-full">
             <Link href="/" legacyBehavior>
               <a className="text-red-600 text-xl md:text-2xl font-bold font-sans">
-                Kuding
+                LOAX
               </a>
             </Link>
           </div>
