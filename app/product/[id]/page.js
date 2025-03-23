@@ -146,6 +146,7 @@ export default function ProductDetailPage() {
               productName={item.title}
               condition={item.condition}
               description={item.description}
+              address={item.User.address}
               price={item.price}
             />
           ))}
