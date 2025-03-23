@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // Daftar gambar yang akan dipilih secara acak
@@ -23,12 +22,24 @@ const getRandomImageUrl = () => {
   return imageUrls[randomIndex];
 };
 
-export default function Card(props) {
-  const { id, productName, condition, description, price } = props;
-  const router = useRouter();
+// Fungsi untuk mendapatkan warna latar belakang berdasarkan kondisi
+const getConditionColor = (condition) => {
+  switch (condition.toLowerCase()) {
+    case "new":
+      return "bg-blue-500";
+    case "used":
+      return "bg-yellow-500";
+    case "refurbished":
+      return "bg-gray-500";
+    default:
+      return "bg-blue-500"; // Default color if condition is not recognized
+  }
+};
 
-  // Set gambar secara acak setiap kali card dirender
+export default function Card({ id, productName, price, condition, address }) {
+  const router = useRouter();
   const imageUrl = getRandomImageUrl();
+  const conditionColor = getConditionColor(condition);
 
   const handleBuyNow = (event) => {
     event.stopPropagation();
@@ -40,40 +51,53 @@ export default function Card(props) {
   return (
     <div
       onClick={() => router.push(`/product/${id}`)}
-      className="relative w-64 bg-white rounded-lg shadow-md p-4 cursor-pointer transition-transform transform hover:scale-105"
+      className="relative w-72 bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-all"
     >
       {/* Gambar Produk */}
-      <img
-        src={imageUrl} // Selalu menggunakan gambar acak
-        alt={productName}
-        className="h-36 w-full object-cover rounded-t-lg"
-      />
-
-      <h2 className="mt-1 text-center font-semibold text-lg text-gray-800">
-        {productName || "Unknown Product"}
-      </h2>
-
-      <p className="text-gray-400 text-xs mt-2">{description}</p>
-
-      <div
-        className={`text-xs font-semibold px-2 py-1 rounded-full w-fit mx-auto mt-2 ${
-          condition === "New" ? "bg-blue-100 text-blue-600" : "bg-green-100 text-green-600"
-        }`}
-      >
-        {condition}
+      <div className="h-48 w-full relative">
+        <img
+          src={imageUrl}
+          alt={productName}
+          className="w-full h-full object-cover"
+        />
       </div>
 
-      <div className="mt-3 flex items-center justify-center gap-2">
-        <span className="text-red-500 text-lg font-bold">{price}</span>
-      </div>
+      {/* Body Card */}
+      <div className="p-4">
+        {/* Nama Produk */}
+        <h3 className="text-lg font-semibold text-gray-800 line-clamp-1 text-center">
+          {productName || "Unknown Product"}
+        </h3>
 
-      {/* Tombol Buy Now */}
-      <button
-        onClick={handleBuyNow}
-        className="mt-4 w-full py-2 rounded text-white font-semibold transition-all bg-blue-500 hover:bg-blue-600"
-      >
-        Buy Now - {price}
-      </button>
+        {/* Harga */}
+        <div className="flex justify-center items-center mt-2">
+          <span className="text-xl font-bold text-red-600">{price}</span>
+        </div>
+
+        {/* Kondisi & Lokasi */}
+        <div className="flex justify-between items-center text-sm mt-2">
+          <span className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${conditionColor}`}>
+            {condition}
+          </span>
+          <span className="text-gray-600 text-xs">📍 {address || "Unknown Location"}</span>
+        </div>
+
+        {/* Tombol Aksi */}
+        <div className="mt-4 flex gap-2">
+          <button
+            onClick={handleBuyNow}
+            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Buy Now
+          </button>
+          <button
+            className="p-2 border rounded-lg hover:bg-gray-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            ❤️
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

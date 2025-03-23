@@ -18,6 +18,8 @@ export default function Catalog() {
           process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
         const response = await fetch(`${baseUrl}/listing`);
         const data = await response.json();
+
+        console.log("Fetched Listings:", data);
         setListings(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -56,8 +58,8 @@ export default function Catalog() {
   const paginatedListings = filteredListings.slice(startIndex, endIndex);
 
   return (
-    <div className="max-w-6xl mx-auto px-6">
-      <h1 className="text-4xl font-bold text-center my-6">RECOMENDATION STUFF FOR YOU 💖</h1>
+    <div className="mx-auto px-6">
+      <h1 className="text-4xl font-bold text-center my-6">RECOMMENDATION STUFF FOR YOU 💖</h1>
       {/* Filter Condition Buttons */}
       <div className="flex justify-center gap-4 mb-6">
         {["new", "Used", "Refurbished"].map((condition) => (
@@ -88,6 +90,7 @@ export default function Catalog() {
             productName={listing.title}
             condition={listing.condition}
             description={listing.description}
+            address={listing.User?.address || "Address not available"}
             price={`$${listing.price}`}
             />
           ))}

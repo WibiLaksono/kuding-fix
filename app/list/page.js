@@ -6,14 +6,10 @@ export default function CatalogPage() {
   // Price range: minimum default 0, maksimum default empty string
   const [priceRange, setPriceRange] = useState([0, ""]);
   const [selectedSort, setSelectedSort] = useState("Default");
-  const [selectedCategories, setSelectedCategories] = useState(new Set());
+  const [selectedConditions, setSelectedConditions] = useState(new Set());
 
-  // Data kategori disesuaikan dengan data produk dummy
-  const categories = [
-    { name: "Clothing", count: 1 },
-    { name: "Electronics", count: 5 },
-    { name: "Accessories", count: 3 },
-  ];
+  // Data kondisi produk
+  const condition = ["New", "Used", "Refurbished"];
 
   // Opsi sorting
   const sortOptions = [
@@ -28,14 +24,14 @@ export default function CatalogPage() {
     "Random Products",
   ];
 
-  const handleCategoryToggle = (category) => {
-    const newSelection = new Set(selectedCategories);
-    if (newSelection.has(category)) {
-      newSelection.delete(category);
+  const handleConditionToggle = (condition) => {
+    const newSelection = new Set(selectedConditions);
+    if (newSelection.has(condition)) {
+      newSelection.delete(condition);
     } else {
-      newSelection.add(category);
+      newSelection.add(condition);
     }
-    setSelectedCategories(newSelection);
+    setSelectedConditions(newSelection);
   };
 
   return (
@@ -47,26 +43,23 @@ export default function CatalogPage() {
       <div className="flex flex-col sm:flex-row gap-8">
         {/* Sidebar Filter */}
         <div className="w-full sm:w-64 space-y-8">
-          {/* Filter Kategori */}
+          {/* Filter Condition */}
           <div className="space-y-4">
-            <h2 className="text-xl font-bold mb-4">PRODUCT CATEGORY</h2>
-            {categories.map((category) => (
+            <h2 className="text-xl font-bold mb-4">PRODUCT CONDITION</h2>
+            {condition.map((cond) => (
               <div
-                key={category.name}
+                key={cond}
                 className="flex justify-between items-center cursor-pointer hover:bg-gray-100 p-2 rounded"
-                onClick={() => handleCategoryToggle(category.name)}
+                onClick={() => handleConditionToggle(cond)}
               >
                 <span
                   className={`${
-                    selectedCategories.has(category.name)
+                    selectedConditions.has(cond)
                       ? "font-semibold text-blue-600"
                       : ""
                   }`}
                 >
-                  {category.name}
-                </span>
-                <span className="text-gray-500 text-sm">
-                  {category.count}
+                  {cond}
                 </span>
               </div>
             ))}
@@ -119,7 +112,7 @@ export default function CatalogPage() {
         {/* Daftar Produk */}
         <div className="flex-1">
           <ProductList
-            selectedCategories={Array.from(selectedCategories)}
+            selectedConditions={Array.from(selectedConditions)}
             priceRange={priceRange}
             sortOption={selectedSort}
           />

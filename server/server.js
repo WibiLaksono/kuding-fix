@@ -165,14 +165,19 @@ app.post("/users/login", async (req, res) => {
 app.get("/listing", async (_, res) => {
   try {
     const listings = await Listing.findAll({
-      include: { model: User, attributes: ["username", "email"] },
+      include: [{
+        model: User,
+        attributes: ["address"], // Pastikan address diambil
+      }],
     });
-    console.log("Listings Data:", listings);
+
+    console.log("Listings Data:", JSON.stringify(listings, null, 2)); // Debugging untuk melihat hasil query
     res.json(listings);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 app.get("/listing/:id", async (req, res) => {
   try {
