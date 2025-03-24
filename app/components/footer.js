@@ -5,7 +5,7 @@ export default function Footer (){
         <footer className="bg-white py-10 mt-10 border-t">
         <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-8">
           <div>
-            <h4 className="font-bold text-black mb-2">Top Shelf</h4>
+            <h4 className="font-bold text-black mb-2">LOAZ</h4>
             <p className="text-sm text-gray-600">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </p>
