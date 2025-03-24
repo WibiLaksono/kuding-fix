@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import ProductList from "../components/ProductList";
+import { useSearchParams } from "next/navigation";
 
 export default function CatalogPage() {
   const [priceRange, setPriceRange] = useState([0, ""]);
@@ -9,6 +10,8 @@ export default function CatalogPage() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false); // Untuk toggle filter di mobile
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("q") || "";
 
   const condition = ["New", "Used", "Refurbished"];
   const sortOptions = [
@@ -102,6 +105,7 @@ export default function CatalogPage() {
         {/* Product List */}
         <div className="flex-1">
           <ProductList
+            searchQuery={searchQuery}
             selectedConditions={Array.from(selectedConditions)}
             priceRange={priceRange}
             sortOption={selectedSort}

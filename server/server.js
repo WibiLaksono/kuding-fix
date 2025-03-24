@@ -162,9 +162,40 @@ app.post("/users/login", async (req, res) => {
   }
 });
 
-app.get("/listing", async (_, res) => {
+app.post("/listing", authenticateToken, async (req, res) => {
   try {
+    if (req.user.role !== "seller") {
+      return res.status(403).json({ error: "Hanya seller yang bisa menambahkan produk" });
+    }
+
+    const newListing = await Listing.create({
+      user_id: req.user.id,
+      title: req.body.title,
+      description: req.body.description,
+      price: req.body.price,
+      condition: req.body.condition,
+      status: "active"
+    });
+
+    res.status(201).json(newListing);
+  } catch (error) {
+    console.error("Error creating listing:", error);
+    res.status(500).json({ 
+      error: "Gagal menambahkan produk",
+      details: error.message 
+    });
+  }
+});
+
+app.get("/listing", async (req, res) => {
+  try {
+    const { q } = req.query;
+    const where = {};
+    if (q) {
+      where.title = { [Sequelize.Op.like]: `%${q}%` };
+    }
     const listings = await Listing.findAll({
+      where,
       include: [{
         model: User,
         attributes: ["address"], // Pastikan address diambil
@@ -174,6 +205,7 @@ app.get("/listing", async (_, res) => {
     console.log("Listings Data:", JSON.stringify(listings, null, 2)); // Debugging untuk melihat hasil query
     res.json(listings);
   } catch (error) {
+    console.error("Error fetching listings:", error);
     res.status(500).json({ error: error.message });
   }
 });

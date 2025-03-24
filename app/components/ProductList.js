@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Card from "./ui/card"; // Gunakan komponen Card yang sesuai
 
-export default function ProductList({ selectedConditions, priceRange, sortOption }) {
+export default function ProductList({ searchQuery, selectedConditions, priceRange, sortOption }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +14,8 @@ export default function ProductList({ selectedConditions, priceRange, sortOption
     async function fetchProducts() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
-        const response = await fetch(`${baseUrl}/listing`);
+        const url = `${baseUrl}/listing${searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : ""}`;
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -28,7 +29,7 @@ export default function ProductList({ selectedConditions, priceRange, sortOption
       }
     }
     fetchProducts();
-  }, []);
+  }, [searchQuery]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {

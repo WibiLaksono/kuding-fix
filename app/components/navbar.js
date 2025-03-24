@@ -2,17 +2,26 @@
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [user, setUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    router.push(`/list?q=${encodeURIComponent(searchQuery)}`);
+  };
 
   // Menu navigasi yang akan digunakan di mobile & desktop
   const navMenus = [
     { name: "Home", link: "/" },
     { name: "All Product", link: "/list" },
+    ...(user?.role === "seller" ? [{ name: "Add Product", link: "/add" }] : []),
   ];
 
   useEffect(() => {
@@ -124,10 +133,13 @@ export default function Navbar() {
           {/* Search Bar */}
           <div className="flex flex-row justify-center items-center gap-2 w-[50%]">
             <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value
+              )}
               placeholder="ketikkan sesuatu"
               className="bg-white border border-gray-400 px-5 w-full h-10 rounded-2xl"
             />
-            <button
+            <button onClick={handleSearch}
               type="button"
               name="search"
               id="search"
@@ -186,10 +198,12 @@ export default function Navbar() {
           {/* Search Bar */}
           <div className="flex flex-row justify-center items-center gap-2 w-[40%] h-full ">
             <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="ketikkan sesuatu"
               className="bg-white border text-gray-800 border-gray-400 px-5 w-[80%] h-[60%] rounded-2xl"
             />
-            <button
+            <button onClick={handleSearch}
               type="button"
               name="search"
               id="search"
@@ -238,7 +252,6 @@ export default function Navbar() {
               {menu.name}
             </a>
           ))}
-        </div>
       </div>
 
       {/* Login Modal */}
@@ -376,6 +389,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

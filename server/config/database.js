@@ -10,6 +10,7 @@ const sequelize = new Sequelize("wrpl", process.env.DB_USER, process.env.DB_PASS
 
 (async () => {
   try {
+    await sequelize.sync({ alter: true });
     await sequelize.authenticate();
     console.log("Connected to MySQL Database!");
   } catch (error) {
