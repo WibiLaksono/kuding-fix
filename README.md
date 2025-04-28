@@ -1,12 +1,13 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Member of team : 
-| Nama  | NIM  |
-|-----------|-----------|-----------|
-| Kosmas Rio Legowo  | 23/512012/PA/21863  |
-| Wibi Laksono Wijaya  | 23/512527/PA/21885  |
-| Bagus Cipta Pratama  | 23/516539/PA/22097  |
-| Ahmad Zainurafi Alfikri  | 23/521008/PA/22397  |
+## Member of team
+
+| Nama                    | NIM                   |
+|--------------------------|------------------------|
+| Kosmas Rio Legowo        | 23/512012/PA/21863      |
+| Wibi Laksono Wijaya      | 23/512527/PA/21885      |
+| Bagus Cipta Pratama      | 23/516539/PA/22097      |
+| Ahmad Zainurafi Alfikri  | 23/521008/PA/22397      |
 
 Rules if you wanna commit a change on your job:
 
