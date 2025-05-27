@@ -1,0 +1,30 @@
+# Server Dockerfile (./server/dockerfile)
+FROM node:18-alpine
+
+# Install curl dan dumb-init
+RUN apk add --no-cache curl dumb-init
+
+# Create app directory dengan user non-root
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodeuser -u 1001
+
+WORKDIR /app
+
+# Copy package files dan install dependencies
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy source code
+COPY . .
+
+# Change ownership ke non-root user
+RUN chown -R nodeuser:nodejs /app
+USER nodeuser
+
+# Expose port
+EXPOSE 5000
+
+
+# Start aplikasi dengan dumb-init
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["npm", "start"]

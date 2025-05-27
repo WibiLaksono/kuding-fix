@@ -1,5 +1,5 @@
 {
-  "name": "kuding-fix",
+  "name": "my-next-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,9 +15,9 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "jsonwebtoken": "^9.0.2",
-    "kuding-fix": "file:",
     "link": "^2.1.1",
     "lucide-react": "^0.482.0",
+    "my-next-app": "file:",
     "next": "15.2.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

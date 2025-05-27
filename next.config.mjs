@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: ["via.placeholder.com"],
+  experimental: {
+    appDir: true,
   },
+  images: {
+    domains: ['example.com'],
+  },
+  // Tambahin config lain di sini
 };
 
 export default nextConfig;

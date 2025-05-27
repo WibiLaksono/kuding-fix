@@ -1,15 +1,20 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import ProductList from "../components/ProductList";
 import { useSearchParams } from "next/navigation";
 
-export default function CatalogPage() {
+const baseURL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+fetch(`${baseURL}/listing`);
+
+// Separate component for the search params logic
+function CatalogContent() {
   const [priceRange, setPriceRange] = useState([0, ""]);
   const [selectedSort, setSelectedSort] = useState("Default");
   const [selectedConditions, setSelectedConditions] = useState(new Set());
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false); // Untuk toggle filter di mobile
+  const [showDropdown, setShowDropdown] = useState(false);
+  
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
 
@@ -116,7 +121,16 @@ export default function CatalogPage() {
   );
 }
 
-// Komponen FilterSection untuk menghindari duplikasi kode
+// Main page component with Suspense wrapper
+export default function CatalogPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-center">Loading...</div>}>
+      <CatalogContent />
+    </Suspense>
+  );
+}
+
+// FilterSection component
 function FilterSection({ selectedConditions, handleConditionToggle, priceRange, setPriceRange, selectedSort, setSelectedSort }) {
   const condition = ["New", "Used", "Refurbished"];
   const sortOptions = [

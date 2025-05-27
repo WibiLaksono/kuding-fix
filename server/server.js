@@ -250,8 +250,13 @@ app.get("/transactions", async (_, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// Tambahin di server.js (atau app.js, sesuai kode lo)
+app.get('/health', (req, res) => {
+  res.status(200).send('OK'); // <-- HARUS status 200!
+});
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
