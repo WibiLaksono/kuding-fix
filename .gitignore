@@ -47,3 +47,5 @@ Thumbs.db
 # Docker volumes/data (biar data DB ga ke-push ke repo)
 db_data/
 db_data/*
+
+/server/node_modules

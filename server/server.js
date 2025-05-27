@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: true,
     credentials: true,
   })
 );
@@ -202,7 +202,6 @@ app.get("/listing", async (req, res) => {
       }],
     });
 
-    console.log("Listings Data:", JSON.stringify(listings, null, 2)); // Debugging untuk melihat hasil query
     res.json(listings);
   } catch (error) {
     console.error("Error fetching listings:", error);
