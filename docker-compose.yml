@@ -2,11 +2,12 @@ version: '3.8'
 
 services:
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ayabiii/frontend-app:latest
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     ports:
-      - "8080:3000"
+      - "8080:8080"
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
@@ -18,9 +19,10 @@ services:
     restart: unless-stopped
 
   backend:
-    build:
-      context: ./server
-      dockerfile: dockerfile
+    image: ayabiii/backend-app:latest
+    # build:
+    #   context: ./server
+    #   dockerfile: Dockerfile
     ports:
       - "5000:5000"
     environment:

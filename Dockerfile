@@ -36,7 +36,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # Expose port
-EXPOSE 3000
+EXPOSE 8080
 
 # Health check
 # Start the application
