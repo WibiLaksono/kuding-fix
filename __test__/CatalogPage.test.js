@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import CatalogPage from "../app/list/page";
+import 'cross-fetch/polyfill';
 
 // Mock next/navigation useSearchParams
 jest.mock("next/navigation", () => ({
